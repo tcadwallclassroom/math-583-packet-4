@@ -1,0 +1,175 @@
+---
+title: "Packet 4 - Conditional Probability"
+knit: (function(input_file, encoding) {
+  out_dir <- 'docs';
+  rmarkdown::render(input_file,
+ encoding=encoding,
+ output_file=file.path(dirname(input_file), out_dir, 'index.html'))})
+author: "Todd CadwalladerOlsker"
+date: "*Last updated:* `r Sys.Date()`"
+output:
+  rmdformats::downcute:
+    downcute_theme: "chaos"
+editor_options: 
+  chunk_output_type: console
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE, cache = TRUE, eval = FALSE)
+library(rmdformats)
+library(openintro)
+library(tidyverse)
+```
+
+# Probability
+
+Lightly read through Chapter 1 of *Statistical Inference for Everyone*. 
+
+Some questions to start us off: 
+
+1. What is the probability that a single coin flip will land on H?
+1. If we flip a coin 10 times, how many times would you expect it to land on H?
+1. If we flip a coin 100 times, how many times would you expect it to land on H? 1000 times?
+1. If you flip a coin 6 times, and it lands on H every time, what would you expect to happen on the 7th flip?
+1. If you flip a coin 4 times, and it lands on H every time, how many heads would you expect out of 10 flips total? (That is, we will flip 6 more times.)
+1. If you flip a coin 20 times, and it lands on H every time, how many heads would you expect out of 100 flips total? (That is, we will flip 80 more times.)
+
+
+## Weather
+
+ If the probability that it will rain next Saturday is 0.25 and the probability that it will rain next Sunday is 0.25, what is the probability that it will rain during the weekend?
+ 
+ 1. What is the probability that it rains on either day if we assume that the weather on Saturday and Sunday are **independent**?
+ 1. What if we suppose that the probabilities are not independent? For example, suppose P(rain on Saturday)=0.25, but
+ P(rain on Sunday|rain on Saturday)=0.40 and 
+ P(rain on Sunday|no rain on Saturday)=0.20.
+ 
+ What is the probability of rain on Sunday? What is the probability that it will rain during the weekend? Before computing the answer to this last question, make a guess - will your answer be higher or lower than your answer when the weather was independent?
+
+
+## COVID Rapid Tests
+
+Accoding to [this link](https://www.ncbi.nlm.nih.gov/pmc/articles/PMC8530784/), COVID antigen tests (so called "rapid tests") for asymptomatic individuals have a sensitivity of 63.1%, and a specificity of 99.1%. In other words:
+
+* If an individual has COVID, the test will return a positive result 63.1% of the time. 
+* If the individual does not have COVID, the test will return a negative result 99.1% of the time.
+
+Some questions before we proceed:
+
+1. Do these tests seem reliable enough to be useful?
+1. What percentage of individuals without COVID receive a **false positive** result?
+1. I had originally written, "What percentage of positive results are **false positives**?" Why is this question more difficult to answer?
+1. What percentage of individuals with COVID receive a **false negative** result?
+1. Assuming you are equally likely to actually have COVID or not have COVID, what does a positive test result tell you? What about a negative test result?
+1. Why did I say "Assuming..." in the previous question?
+1. How well does the quote below from a [recent article](https://www.vox.com/recode/22870328/how-to-use-rapid-tests-omicron) fit with the information we have so far?
+
+"So you might be wondering: What’s the point if rapid tests aren’t as accurate as PCR tests? Well, rapid antigen tests, which look for a specific protein on the Covid-19 virus, remain extremely effective at confirming positive cases. Put simply, if you test positive on a rapid test, you almost certainly have Covid-19. If you test negative, in some cases, you might still test positive on a PCR test, which is much more sensitive because it tests for genetic evidence of the virus. Rapid tests may not pick up positive cases in people who have been vaccinated or who have recently recovered from Covid-19, since they may produce less virus, one expert told Recode."
+
+### A hypothetical population
+
+Imagine we have a population of 10000 people, and 1% of them (100 people) actually have COVID. We give them all rapid-tests for COVID, and we get the following hypothetical data (based on the sensitivity and specificity values above):
+
+| Number of individuals | Negative Test | Positive Test | Total |
+|-----------------------|---------------|---------------|-------|
+| No COVID              | 9811          | 89            | 9900  |
+| Has COVID             | 37            | 63            | 100   |
+| Total                 | 9848          | 152           | 10000 |
+
+1. What is the probability that an individual has COVID, given that they receive a positive rapid-test?
+1. What is the probability that an individual does not have COVID, given that they receive a negative rapid-test?
+1. How do all of these numbers change if 5% of the population has covid? 50%? More?
+
+## The Monty Hall Problem
+ 
+ One of the most popular probability problems is called the Monty
+Hall problem, and is based on the television game show "Let’s Make
+a Deal." It can take on many forms, but a common form is as follows:
+
+Suppose you’re on a game show, and you’re given the choice
+of three doors: behind one door is a car; behind the others, goats. You pick a
+door, say No. 1 (but the door is not opened), and the host, who knows what’s
+behind the doors, opens another door, say No. 3, which has a goat.^[It's important to note that this is part of the schtick- the host will always open on the the doors you have not chosen, and will always reveal a goat behind the door he opens.] He then says to you, "Do you want to change your choice to door No. 2?" Is it to
+your advantage or disadvantage to switch your choice, or does it matter
+whether you switch your choice or not?
+ 
+1. What is your initial guess to this problem?
+1. What is P(the door is behind Door 1)?
+1. What is P(the door is behind Door 1|a goat is revealed behind Door 3)?^[For the last two questions, Door 1 is the door you originally chose, and the host opened door 3, revealing a goat. Door 2 is the door you may switch to.]
+1. What is P(the door is behind Door 2|a goat is revealed behind Door 3)?
+
+Need more convincing? Copy the following code into R:
+
+```{r monty_code,eval=FALSE}
+## WARNING: This clears all objects out of your memory.
+## This can be a good thing.
+rm(list=ls())
+
+monty<-function(strat='stay',N=1000,print_games=TRUE)
+{
+  doors<-1:3 #initialize the doors behind one of which is a good prize
+  win<-0 #to keep track of number of wins
+  for(i in 1:N)
+  {
+    prize <- sample(doors,1) #randomize which door has the good prize
+    guess <- sample(doors,1) #guess a door at random
+    ## Reveal one of the doors you didn't pick which has a bum prize
+    if(prize != guess)
+      reveal <- doors[-c(prize,guess)]
+    else
+      reveal<-sample(doors[-c(prize,guess)],1)
+    ## Stay with your initial guess or switch
+    if(strat=='switch')
+      select<-doors[-c(reveal,guess)]
+    if(strat=='stay')
+      select<-guess
+    if(strat=='random')
+      select<-sample(doors[-reveal],1)
+    ## Count up your wins
+    if(select==prize)
+    {
+      win<-win+1
+      outcome<-'Winner!'
+    }else
+      outcome<-'Loser!'
+    if(print_games)
+      cat(paste('Guess: ',guess,
+                '\nRevealed: ',reveal,
+                '\nSelection: ',select,
+                '\nPrize door: ',prize,
+                '\n',outcome,'\n\n',sep=''))
+  }
+  #Print the win percentage of your strategy
+  cat(paste('Using the ',strat,' strategy, 
+            your win percentage was ',win/N*100,'%\n',sep='')) 
+}
+
+## Code from: 
+## https://www.r-bloggers.com/2012/02/monty-hall-by-simulation-in-r/
+```
+
+This creates a function called 'monty' that simulates several runs of the Monty Hall game. 
+
+Try running the following:
+```{r monty_ex, eval=FALSE}
+monty(strat="stay",N=10)
+monty(strat="switch",N=10)
+monty(strat="stay",1000,FALSE)
+monty(strat="switch",1000,FALSE)
+```
+
+## Tuesday's Pet
+
+Here is an interesting variant of a similar idea:
+
+My sister-in-law Laurie loves animals; especially cats and dogs. When she adopts an animal from the shelter, she can never decide between a cat or a dog, so she flips a fair coin -- the probability that her newly adopted pet is a dog or a cat is is exactly 50%/50%, and these probabilities are independent for each pet she adopts. She has adopted two pets at different times over the past year.
+
+1. Laurie (truthfully) tells you that the first pet she adopted is a dog. What is the probability that the second pet is also a dog?
+1. Laurie (truthfully) tells you that one of the pets she adopted is a dog. What is the probability that the other pet is also a dog?
+1. Laurie (truthfully) tells you that one of the pets is a is a dog adopted on a Tuesday. What is the probability that the other pet is also a dog?
+
+## To Turn In
+
+1. Solve problem 3.17 on p. 110 of OpenIntro Statistics.
+1. Solve problem 3.21 on p. 111 of OpenIntro Statistics.
+1. Solve problem 3.22 on p. 111 of OpenIntro Statistics.
