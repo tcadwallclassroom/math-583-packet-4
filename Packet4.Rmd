@@ -68,7 +68,7 @@ Some questions before we proceed:
 
 ### A hypothetical population
 
-Imagine we have a population of 10000 people, and 1% of them (100 people) actually have COVID. We give them all rapid-tests for COVID, and we get the following hypothetical data (based on the sensitivity and specificity values above):
+Imagine we have a population of 10,000 people, and 1% of them (100 people) actually have COVID. We give them all rapid-tests for COVID, and we get the following hypothetical data (based on the sensitivity and specificity values above):
 
 | Number of individuals | Negative Test | Positive Test | Total |
 |-----------------------|---------------|---------------|-------|
