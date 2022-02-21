@@ -141,7 +141,7 @@
       <p class="authors">
            <span class="glyphicon glyphicon-user"></span> Todd CadwalladerOlsker
       </p>
-         <p class="date"><span class="glyphicon glyphicon-calendar"></span> <em>Last updated:</em> 2022-02-17</p>
+         <p class="date"><span class="glyphicon glyphicon-calendar"></span> <em>Last updated:</em> 2022-02-20</p>
            
 
    
@@ -224,8 +224,40 @@
 <ol style="list-style-type: decimal">
 <li>What is the probability that an individual has COVID, given that they receive a positive rapid-test?</li>
 <li>What is the probability that an individual does not have COVID, given that they receive a negative rapid-test?</li>
-<li>How do all of these numbers change if 5% of the population has covid? 50%? More?</li>
+<li>How do all of these numbers change if 5% of the population has covid? 10%? 50%? More?</li>
+<li>We don’t have to use hypothetical data; we can use real data! The first article contains the following data for asymptomatic individuals:</li>
 </ol>
+<table>
+<thead>
+<tr class="header">
+<th>Number of individuals</th>
+<th>Negative Test</th>
+<th>Positive Test</th>
+<th>Total</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>No COVID</td>
+<td>2594</td>
+<td>38</td>
+<td>2632</td>
+</tr>
+<tr class="even">
+<td>Has COVID</td>
+<td>11</td>
+<td>65</td>
+<td>76</td>
+</tr>
+<tr class="odd">
+<td>Total</td>
+<td>2605</td>
+<td>103</td>
+<td>2708</td>
+</tr>
+</tbody>
+</table>
+<p>According to this data, what is the probability that an individual has COVID, given that they receive a positive rapid-test?</p>
 </div>
 </div>
 <div id="the-monty-hall-problem" class="section level2">
@@ -234,9 +266,9 @@
 <p>Suppose you’re on a game show, and you’re given the choice of three doors: behind one door is a car; behind the others, goats. You pick a door, say No. 1 (but the door is not opened), and the host, who knows what’s behind the doors, opens another door, say No. 3, which has a goat.<a href="#fn1" class="footnote-ref" id="fnref1"><sup>1</sup></a> He then says to you, “Do you want to change your choice to door No. 2?” Is it to your advantage or disadvantage to switch your choice, or does it matter whether you switch your choice or not?</p>
 <ol style="list-style-type: decimal">
 <li>What is your initial guess to this problem?</li>
-<li>What is P(the door is behind Door 1)?</li>
-<li>What is P(the door is behind Door 1|a goat is revealed behind Door 3)?<a href="#fn2" class="footnote-ref" id="fnref2"><sup>2</sup></a></li>
-<li>What is P(the door is behind Door 2|a goat is revealed behind Door 3)?</li>
+<li>What is P(the car is behind Door 1)?</li>
+<li>What is P(the car is behind Door 1|a goat is revealed behind Door 3)?<a href="#fn2" class="footnote-ref" id="fnref2"><sup>2</sup></a></li>
+<li>What is P(the car is behind Door 2|a goat is revealed behind Door 3)?</li>
 </ol>
 <p>Need more convincing? Copy the following code into R:</p>
 <pre class="r"><code>## WARNING: This clears all objects out of your memory.
@@ -303,10 +335,135 @@ monty(strat=&quot;switch&quot;,1000,FALSE)</code></pre>
 </div>
 <div id="to-turn-in" class="section level2">
 <h2>To Turn In</h2>
+<p>This assignment is based on two of the labs from Math 338. The setup:</p>
+<p><em>“After their Halloween party, Tom and Jessy ended up with 20 candy bars in a bag; Tom thought they had 12 Twix and 8 Reese’s candy bars while Jessy thought they had 6 Twix and 14 Reese’s.”</em></p>
+<p>The following tables shows what a fair distribution would look like for each possible scenario:</p>
+<p>The Fair Distribution of Candies if Tom is Correct:</p>
+<table>
+<thead>
+<tr class="header">
+<th></th>
+<th>Twix</th>
+<th>Reese’s</th>
+<th>Total</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>Tom</td>
+<td>6</td>
+<td>4</td>
+<td>10</td>
+</tr>
+<tr class="even">
+<td>Jessy</td>
+<td>6</td>
+<td>4</td>
+<td>10</td>
+</tr>
+<tr class="odd">
+<td>Total</td>
+<td>12</td>
+<td>8</td>
+<td>20</td>
+</tr>
+</tbody>
+</table>
+<p>The Fair Distribution of Candies if Jessy is Correct</p>
+<table>
+<thead>
+<tr class="header">
+<th></th>
+<th>Twix</th>
+<th>Reese’s</th>
+<th>Total</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>Tom</td>
+<td>3</td>
+<td>7</td>
+<td>10</td>
+</tr>
+<tr class="even">
+<td>Jessy</td>
+<td>3</td>
+<td>7</td>
+<td>10</td>
+</tr>
+<tr class="odd">
+<td>Total</td>
+<td>6</td>
+<td>14</td>
+<td>20</td>
+</tr>
+</tbody>
+</table>
+<p>Before any kind of evidence is presented, both believe themselves to be correct, and we have no way of knowing which is more likely to be correct. In other words, our <em>prior probabilities</em> for each person being correct is 0.5 (assuming that one of them is, in fact, correct!)</p>
+<p>Suppose that they randomly choose 10 candies from the bag, and find 5 Twix and 5 Reese’s.</p>
 <ol style="list-style-type: decimal">
-<li>Solve problem 3.17 on p. 110 of OpenIntro Statistics.</li>
-<li>Solve problem 3.21 on p. 111 of OpenIntro Statistics.</li>
-<li>Solve problem 3.22 on p. 111 of OpenIntro Statistics.</li>
+<li><p><strong>Without doing any additional calculation,</strong> based solely on the fact that we found 5 Twix and 5 Reese’s when we selected 10 candies from the bag, which person do you believe is more likely to be correct?</p></li>
+<li><p><strong>Without doing any additional calculation,</strong></p></li>
+</ol>
+<ol style="list-style-type: lower-alpha">
+<li>Estimate how likely Tom is to be correct based on this new evidence, and estimate how likely Jessy is to be correct, assuming one of them is correct.</li>
+<li>What if the evidence had been that we pulled out 7 Twix and 3 Reece’s? How would that change your answer?</li>
+</ol>
+<p><em>(Yes, in this example, it would be easy to just pull all 20 candies out of the bag, and determine once and for all who is correct. However, if there were 20,000 candies in the bag, we would not be able to determine who is correct so easily!)</em></p>
+<ol start="3" style="list-style-type: decimal">
+<li>In R, create a distribution of 20 candies based on Tom’s claim using the following code:</li>
+</ol>
+<p><code>Candy_Tom &lt;- c(rep(&quot;Twix&quot;, 12), rep(&quot;Reese&#39;s&quot;, 8))</code></p>
+<p>and for Jessy’s claim:</p>
+<p><code>Candy_Jessy &lt;- c(rep(&quot;Twix&quot;, 6), rep(&quot;Reese&#39;s&quot;, 14))</code></p>
+<p>Now, we’ll simulate drawing 10 candies out of the bag <em>given</em> each of these claims. For each claim, we’ll do 1000 simulations. Run the following code in R:</p>
+<pre class="r"><code>library(tidyverse) # if you have not already loaded it
+
+sims &lt;- 1000
+samp_size &lt;- 10
+Twix_counter &lt;- numeric(sims)
+
+for(i in 1:sims) {
+  candies &lt;- sample(Candy_Tom, 10, replace = F)
+  samp_df &lt;- data.frame(candies)
+  candies_count &lt;- samp_df %&gt;% count(candies)
+  Twix_count &lt;- filter(candies_count, candies == &quot;Twix&quot;)$n
+  Twix_counter[i] &lt;- Twix_count
+}
+
+Twix_sims_T &lt;- data.frame(Twix_counter)
+
+Twix_sims_T %&gt;% ggplot(aes(x = Twix_counter)) +
+  geom_bar(fill = &quot;forestgreen&quot;) + 
+  geom_vline(aes(xintercept = 5), linetype = &quot;dashed&quot;, color = &quot;firebrick&quot;) +
+  scale_x_continuous(breaks = c(1:10),labels = c(1:10)) +
+  labs(title =  paste(sims, &quot;simulations of drawing&quot;, samp_size, &quot;candies&quot;),
+       subtitle = &quot;assuming Tom&#39;s claim is correct.&quot;,
+       x = &quot;Number of Twix in sample&quot;,
+       y = &quot;Number of simulations&quot;)</code></pre>
+<p>Looking at this histogram, <em>approximate</em> the probability of drawing exactly 5 Twix <em>under the assumption</em> that Tom’s claim is correct. You can use</p>
+<p><code>count(Twix_sims_T, Twix_counter == 5)</code></p>
+<p>find the exact number of simulations in which exactly 5 Twix were drawn, but remember this number (divided by 1000) is still only an approximation of the probability.</p>
+<ol start="4" style="list-style-type: decimal">
+<li><p>Modify the above code to get an approximation of the probability of drawing exactly 5 Twix under the assumption that Jessy’s claim is correct.</p></li>
+<li><p>Which person is more liekly to be correct, given our evidence?</p></li>
+<li><p>Now, suppose we have not yet collected any evidence (that is, we have not collected a sample of 10 candies yet.) We’re about to draw a sample of 10 candies, so let’s propose the following rule:</p></li>
+</ol>
+<ul>
+<li>If our sample contains 5 or more Twix, we will judge Tom to be correct.</li>
+<li>If our sample contains 4 or fewer Twix, we will judge Jessy to be correct.</li>
+</ul>
+<p>To measure how good our rule is, what is the probability of the following <em>errors</em>?</p>
+<ol style="list-style-type: lower-alpha">
+<li>What is the probability that Tom is correct, but our sample supports Jessy’s claim? In other words, what is P(4 or fewer Twix | Tom is correct)?</li>
+<li>What is the probability that Jessy is correct, but our sample supports Tom’s claim? In other words, what is P(5 or more Twix | Jessy is correct)?</li>
+</ol>
+<ol start="7" style="list-style-type: decimal">
+<li><p>Could we modify the above rule by increasing or decreasing our cutoff value in such a way that both errors would be reduced?</p></li>
+<li><p>Using Bayes’ Theorem and the approximate probabilities you found earlier, what is the probability that Tom is correct given the evidence of drawing 5 Twix? Use the prior probability P(Tom is correct) = 0.5. Compare this to your answer to question 2 – how good was your earlier guess?</p></li>
+<li><p>What is the probability that Tom is correct given the evidence of drawing 5 Twix, if our prior had instead been P(Tom is correct) = 0.1?</p></li>
+<li><p>Solve problems 3.21 and 3.22 on p. 111 of OpenIntro Statistics.</p></li>
 </ol>
 </div>
 </div>

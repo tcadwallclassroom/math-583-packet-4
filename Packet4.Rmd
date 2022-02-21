@@ -78,7 +78,17 @@ Imagine we have a population of 10,000 people, and 1% of them (100 people) actua
 
 1. What is the probability that an individual has COVID, given that they receive a positive rapid-test?
 1. What is the probability that an individual does not have COVID, given that they receive a negative rapid-test?
-1. How do all of these numbers change if 5% of the population has covid? 50%? More?
+1. How do all of these numbers change if 5% of the population has covid? 10%? 50%? More? 
+1. We don't have to use hypothetical data; we can use real data! The first article contains the following data for asymptomatic individuals:
+
+| Number of individuals | Negative Test | Positive Test | Total |
+|-----------------------|---------------|---------------|-------|
+| No COVID              | 2594          | 38            | 2632  |
+| Has COVID             | 11            | 65            | 76    |
+| Total                 | 2605          | 103           | 2708  |
+
+According to this data, what is the probability that an individual has COVID, given that they receive a positive rapid-test? 
+
 
 ## The Monty Hall Problem
  
@@ -94,9 +104,9 @@ your advantage or disadvantage to switch your choice, or does it matter
 whether you switch your choice or not?
  
 1. What is your initial guess to this problem?
-1. What is P(the door is behind Door 1)?
-1. What is P(the door is behind Door 1|a goat is revealed behind Door 3)?^[For the last two questions, Door 1 is the door you originally chose, and the host opened door 3, revealing a goat. Door 2 is the door you may switch to.]
-1. What is P(the door is behind Door 2|a goat is revealed behind Door 3)?
+1. What is P(the car is behind Door 1)?
+1. What is P(the car is behind Door 1|a goat is revealed behind Door 3)?^[For the last two questions, Door 1 is the door you originally chose, and the host opened door 3, revealing a goat. Door 2 is the door you may switch to.]
+1. What is P(the car is behind Door 2|a goat is revealed behind Door 3)?
 
 Need more convincing? Copy the following code into R:
 
@@ -170,6 +180,104 @@ My sister-in-law Laurie loves animals; especially cats and dogs. When she adopts
 
 ## To Turn In
 
-1. Solve problem 3.17 on p. 110 of OpenIntro Statistics.
-1. Solve problem 3.21 on p. 111 of OpenIntro Statistics.
-1. Solve problem 3.22 on p. 111 of OpenIntro Statistics.
+This assignment is based on two of the labs from Math 338. The setup: 
+
+*"After their Halloween party, Tom and Jessy ended up with 20 candy bars in a bag; Tom thought they had 12 Twix and 8 Reese's candy bars while Jessy thought they had 6 Twix and 14 Reese's."*
+
+The following tables shows what a fair distribution would look like for each possible scenario:
+
+The Fair Distribution of Candies if Tom is Correct:
+
+| |Twix|Reese's|Total|
+|---|---|---|---|
+|Tom|6|4|10|
+|Jessy|6|4|10|
+|Total|12|8|20|
+ 
+
+The Fair Distribution of Candies if Jessy is Correct
+
+| |Twix|Reese's|Total|
+|---|---|---|---|
+|Tom|3|7|10|
+|Jessy|3|7|10|
+|Total|6|14|20|
+
+Before any kind of evidence is presented, both believe themselves to be correct, and we have no way of knowing which is more likely to be correct. In other words, our *prior probabilities* for each person being correct is 0.5 (assuming that one of them is, in fact, correct!)
+
+Suppose that they randomly choose 10 candies from the bag, and find 5 Twix and 5 Reese's. 
+
+1. **Without doing any additional calculation,** based solely on the fact that we found 5 Twix and 5 Reese's when we selected 10 candies from the bag, which person do you believe is more likely to be correct?
+
+2. **Without doing any additional calculation,** 
+a. Estimate how likely Tom is to be correct based on this new evidence, and estimate how likely Jessy is to be correct, assuming one of them is correct.
+b. What if the evidence had been that we pulled out 7 Twix and 3 Reece's? How would that change your answer?
+
+
+*(Yes, in this example, it would be easy to just pull all 20 candies out of the bag, and determine once and for all who is correct. However, if there were 20,000 candies in the bag, we would not be able to determine who is correct so easily!)*
+
+3. In R, create a distribution of 20 candies based on Tom's claim using the following code:
+
+`Candy_Tom <- c(rep("Twix", 12), rep("Reese's", 8))`
+
+and for Jessy's claim:
+
+`Candy_Jessy <- c(rep("Twix", 6), rep("Reese's", 14))`
+
+Now, we'll simulate drawing 10 candies out of the bag *given* each of these claims. For each claim, we'll do 1000 simulations. Run the following code in R:
+
+```{r tom}
+library(tidyverse) # if you have not already loaded it
+
+sims <- 1000
+samp_size <- 10
+Twix_counter <- numeric(sims)
+
+for(i in 1:sims) {
+  candies <- sample(Candy_Tom, 10, replace = F)
+  samp_df <- data.frame(candies)
+  candies_count <- samp_df %>% count(candies)
+  Twix_count <- filter(candies_count, candies == "Twix")$n
+  Twix_counter[i] <- Twix_count
+}
+
+Twix_sims_T <- data.frame(Twix_counter)
+
+Twix_sims_T %>% ggplot(aes(x = Twix_counter)) +
+  geom_bar(fill = "forestgreen") + 
+  geom_vline(aes(xintercept = 5), linetype = "dashed", color = "firebrick") +
+  scale_x_continuous(breaks = c(1:10),labels = c(1:10)) +
+  labs(title =  paste(sims, "simulations of drawing", samp_size, "candies"),
+       subtitle = "assuming Tom's claim is correct.",
+       x = "Number of Twix in sample",
+       y = "Number of simulations")
+
+```
+
+Looking at this histogram, *approximate* the probability of drawing exactly 5 Twix *under the assumption* that Tom's claim is correct. You can use
+
+`count(Twix_sims_T, Twix_counter == 5)`
+
+find the exact number of simulations in which exactly 5 Twix were drawn, but remember this number (divided by 1000) is still only an approximation of the probability.
+
+4. Modify the above code to get an approximation of the probability of drawing exactly 5 Twix under the assumption that Jessy's claim is correct.
+
+5. Which person is more liekly to be correct, given our evidence?
+
+6. Now, suppose we have not yet collected any evidence (that is, we have not collected a sample of 10 candies yet.) We're about to draw a sample of 10 candies, so let's propose the following rule:
+
+* If our sample contains 5 or more Twix, we will judge Tom to be correct.
+* If our sample contains 4 or fewer Twix, we will judge Jessy to be correct.
+
+To measure how good our rule is, what is the probability of the following *errors*?
+
+a. What is the probability that Tom is correct, but our sample supports Jessy's claim? In other words, what is P(4 or fewer Twix | Tom is correct)?
+b. What is the probability that Jessy is correct, but our sample supports Tom's claim? In other words, what is P(5 or more Twix | Jessy is correct)?
+
+7. Could we modify the above rule by increasing or decreasing our cutoff value in such a way that both errors would be reduced?
+
+8. Using Bayes' Theorem and the approximate probabilities you found earlier, what is the probability that Tom is correct given the evidence of drawing 5 Twix? Use the prior probability P(Tom is correct) = 0.5. Compare this to your answer to question 2 -- how good was your earlier guess?
+
+9. What is the probability that Tom is correct given the evidence of drawing 5 Twix, if our prior had instead been P(Tom is correct) = 0.1?
+
+10. Solve problems 3.21 and 3.22 on p. 111 of OpenIntro Statistics.
