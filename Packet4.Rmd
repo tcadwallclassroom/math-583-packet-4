@@ -109,6 +109,7 @@ whether you switch your choice or not?
 1. What is P(the car is behind Door 2|a goat is revealed behind Door 3)?
 
 Need more convincing? Copy the following code into R:
+(This code and more can be found at https://github.com/tcadwallclassroom/math-583-packet-4.)
 
 ```{r monty_code,eval=FALSE}
 ## WARNING: This clears all objects out of your memory.
@@ -231,19 +232,18 @@ library(tidyverse) # if you have not already loaded it
 
 sims <- 1000
 samp_size <- 10
-Twix_counter <- numeric(sims)
+sample_df <- data.frame(matrix(ncol = samp_size, nrow = 0))
+colnames(sample_df) <- c(1:samp_size)
 
 for(i in 1:sims) {
-  candies <- sample(Candy_Tom, 10, replace = F)
-  samp_df <- data.frame(candies)
-  candies_count <- samp_df %>% count(candies)
-  Twix_count <- filter(candies_count, candies == "Twix")$n
-  Twix_counter[i] <- Twix_count
+  candy_sample <- sample(Candy_Tom, samp_size, replace = F)
+  sample_df[i,] <- t(candy_sample)
 }
 
-Twix_sims_T <- data.frame(Twix_counter)
+sample_df <- sample_df %>% mutate(Twix_count = rowSums(. == "Twix"))
 
-Twix_sims_T %>% ggplot(aes(x = Twix_counter)) +
+
+sample_df %>% ggplot(aes(x = Twix_count)) +
   geom_bar(fill = "forestgreen") + 
   geom_vline(aes(xintercept = 5), linetype = "dashed", color = "firebrick") +
   scale_x_continuous(breaks = c(1:10),labels = c(1:10)) +
@@ -251,7 +251,6 @@ Twix_sims_T %>% ggplot(aes(x = Twix_counter)) +
        subtitle = "assuming Tom's claim is correct.",
        x = "Number of Twix in sample",
        y = "Number of simulations")
-
 ```
 
 Looking at this histogram, *approximate* the probability of drawing exactly 5 Twix *under the assumption* that Tom's claim is correct. You can use

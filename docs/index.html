@@ -141,7 +141,7 @@
       <p class="authors">
            <span class="glyphicon glyphicon-user"></span> Todd CadwalladerOlsker
       </p>
-         <p class="date"><span class="glyphicon glyphicon-calendar"></span> <em>Last updated:</em> 2022-02-20</p>
+         <p class="date"><span class="glyphicon glyphicon-calendar"></span> <em>Last updated:</em> 2022-02-21</p>
            
 
    
@@ -270,7 +270,7 @@
 <li>What is P(the car is behind Door 1|a goat is revealed behind Door 3)?<a href="#fn2" class="footnote-ref" id="fnref2"><sup>2</sup></a></li>
 <li>What is P(the car is behind Door 2|a goat is revealed behind Door 3)?</li>
 </ol>
-<p>Need more convincing? Copy the following code into R:</p>
+<p>Need more convincing? Copy the following code into R: (This code and more can be found at <a href="https://github.com/tcadwallclassroom/math-583-packet-4" class="uri">https://github.com/tcadwallclassroom/math-583-packet-4</a>.)</p>
 <pre class="r"><code>## WARNING: This clears all objects out of your memory.
 ## This can be a good thing.
 rm(list=ls())
@@ -422,19 +422,18 @@ monty(strat=&quot;switch&quot;,1000,FALSE)</code></pre>
 
 sims &lt;- 1000
 samp_size &lt;- 10
-Twix_counter &lt;- numeric(sims)
+sample_df &lt;- data.frame(matrix(ncol = samp_size, nrow = 0))
+colnames(sample_df) &lt;- c(1:samp_size)
 
 for(i in 1:sims) {
-  candies &lt;- sample(Candy_Tom, 10, replace = F)
-  samp_df &lt;- data.frame(candies)
-  candies_count &lt;- samp_df %&gt;% count(candies)
-  Twix_count &lt;- filter(candies_count, candies == &quot;Twix&quot;)$n
-  Twix_counter[i] &lt;- Twix_count
+  candy_sample &lt;- sample(Candy_Tom, samp_size, replace = F)
+  sample_df[i,] &lt;- t(candy_sample)
 }
 
-Twix_sims_T &lt;- data.frame(Twix_counter)
+sample_df &lt;- sample_df %&gt;% mutate(Twix_count = rowSums(. == &quot;Twix&quot;))
 
-Twix_sims_T %&gt;% ggplot(aes(x = Twix_counter)) +
+
+sample_df %&gt;% ggplot(aes(x = Twix_count)) +
   geom_bar(fill = &quot;forestgreen&quot;) + 
   geom_vline(aes(xintercept = 5), linetype = &quot;dashed&quot;, color = &quot;firebrick&quot;) +
   scale_x_continuous(breaks = c(1:10),labels = c(1:10)) +
