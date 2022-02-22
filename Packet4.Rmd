@@ -173,7 +173,7 @@ monty(strat="switch",1000,FALSE)
 
 Here is an interesting variant of a similar idea:
 
-My sister-in-law Laurie loves animals; especially cats and dogs. When she adopts an animal from the shelter, she can never decide between a cat or a dog, so she flips a fair coin -- the probability that her newly adopted pet is a dog or a cat is is exactly 50%/50%, and these probabilities are independent for each pet she adopts. She has adopted two pets at different times over the past year.
+My sister-in-law Laurie loves animals; especially cats and dogs. When she adopts an animal from the shelter, she can never decide between a cat or a dog, so she flips a fair coin -- the probability that her newly adopted pet is a cat or a dog is is exactly 50%/50%, and these probabilities are independent for each pet she adopts. She has adopted two pets at different times over the past year.
 
 1. Laurie (truthfully) tells you that the first pet she adopted is a dog. What is the probability that the second pet is also a dog?
 1. Laurie (truthfully) tells you that one of the pets she adopted is a dog. What is the probability that the other pet is also a dog?
