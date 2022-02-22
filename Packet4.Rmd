@@ -83,9 +83,9 @@ Imagine we have a population of 10,000 people, and 1% of them (100 people) actua
 
 | Number of individuals | Negative Test | Positive Test | Total |
 |-----------------------|---------------|---------------|-------|
-| No COVID              | 2594          | 38            | 2632  |
-| Has COVID             | 11            | 65            | 76    |
-| Total                 | 2605          | 103           | 2708  |
+| No COVID              | 2594          | 11            | 2605  |
+| Has COVID             | 38            | 65            | 103   |
+| Total                 | 2632          | 76            | 2708  |
 
 According to this data, what is the probability that an individual has COVID, given that they receive a positive rapid-test? 
 

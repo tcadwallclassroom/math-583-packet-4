@@ -43,6 +43,16 @@ bayesthm2 <- function(pos_rate = .5, true_pos_rate = .5, true_neg_rate = .5, num
   prop.table(expected_table, margin = 2)
 }
 
+### By Numbers
+
+data_table <- matrix(c(2594, 11, 38, 65), ncol= 2 , byrow=TRUE)
+colnames(data_table) <- c("Negative test", "Positive test")
+rownames(data_table) <- c("Negative", "Positive")
+data_table <- as.table(data_table)
+print(data_table)
+prop.table(data_table, margin = 1)
+prop.table(data_table, margin = 2)
+
 ### Probabilistic Version
 
 pos_rate = 0.01
