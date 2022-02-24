@@ -278,5 +278,3 @@ b. What is the probability that Jessy is correct, but our sample supports Tom's 
 8. Using Bayes' Theorem and the approximate probabilities you found earlier, what is the probability that Tom is correct given the evidence of drawing 5 Twix? Use the prior probability P(Tom is correct) = 0.5. Compare this to your answer to question 2 -- how good was your earlier guess?
 
 9. What is the probability that Tom is correct given the evidence of drawing 5 Twix, if our prior had instead been P(Tom is correct) = 0.1?
-
-10. Solve problems 3.21 and 3.22 on p. 111 of OpenIntro Statistics.
