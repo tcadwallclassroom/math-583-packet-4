@@ -40,7 +40,9 @@ bayesthm2 <- function(pos_rate = .5, true_pos_rate = .5, true_neg_rate = .5, num
   expected_df <- data.frame(true_status,test_status)
   expected_table <- table(expected_df)
   print(expected_table)
-  prop.table(expected_table, margin = 2)
+  print(prop.table(expected_table, margin = 2))
+  addmargins(expected_table)
+  
 }
 
 ### By Numbers
