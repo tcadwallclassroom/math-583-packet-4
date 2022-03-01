@@ -3,8 +3,8 @@ title: "Packet 4 - Conditional Probability"
 knit: (function(input_file, encoding) {
   out_dir <- 'docs';
   rmarkdown::render(input_file,
- encoding=encoding,
- output_file=file.path(dirname(input_file), out_dir, 'index.html'))})
+  encoding=encoding,
+  output_file=file.path(dirname(input_file), out_dir, 'index.html'))})
 author: "Todd CadwalladerOlsker"
 date: "*Last updated:* `r Sys.Date()`"
 output:
@@ -228,15 +228,20 @@ and for Jessy's claim:
 Now, we'll simulate drawing 10 candies out of the bag *given* each of these claims. For each claim, we'll do 1000 simulations. Run the following code in R:
 
 ```{r tom}
-library(tidyverse) # if you have not already loaded it
+library(tidyverse) ### if you have not already done so
 
+### --- change these as needed
 sims <- 1000
 samp_size <- 10
+correct_person <- "Tom"
+correct_person_dist <- Candy_Tom
+### ---
+
 sample_df <- data.frame(matrix(ncol = samp_size, nrow = 0))
 colnames(sample_df) <- c(1:samp_size)
 
 for(i in 1:sims) {
-  candy_sample <- sample(Candy_Tom, samp_size, replace = F)
+  candy_sample <- sample(correct_person_dist, samp_size, replace = F)
   sample_df[i,] <- t(candy_sample)
 }
 
@@ -248,33 +253,37 @@ sample_df %>% ggplot(aes(x = Twix_count)) +
   geom_vline(aes(xintercept = 5), linetype = "dashed", color = "firebrick") +
   scale_x_continuous(breaks = c(1:10),labels = c(1:10)) +
   labs(title =  paste(sims, "simulations of drawing", samp_size, "candies"),
-       subtitle = "assuming Tom's claim is correct.",
+       subtitle = paste("assuming ", correct_person, "'s claim is correct.", sep = ""),
        x = "Number of Twix in sample",
        y = "Number of simulations")
 ```
 
 Looking at this histogram, *approximate* the probability of drawing exactly 5 Twix *under the assumption* that Tom's claim is correct. You can use
 
-`count(Twix_sims_T, Twix_counter == 5)`
+`sample_df %>% count(Twix_count == 5)`
 
-find the exact number of simulations in which exactly 5 Twix were drawn, but remember this number (divided by 1000) is still only an approximation of the probability.
+or 
+
+`sample_df %>% select(Twix_count) %>% table()`
+
+to find the exact number of simulations in which exactly 5 Twix were drawn, but remember this number (divided by 1000) is still only an approximation of the probability.
 
 4. Modify the above code to get an approximation of the probability of drawing exactly 5 Twix under the assumption that Jessy's claim is correct.
 
-5. Which person is more liekly to be correct, given our evidence?
+5. Using Bayes' Theorem and the approximate probabilities you found earlier, what is the probability that Tom is correct given the evidence of drawing 5 Twix? Use the prior probability P(Tom is correct) = 0.5. Compare this to your answer to question 2 -- how good was your earlier guess?
 
-6. Now, suppose we have not yet collected any evidence (that is, we have not collected a sample of 10 candies yet.) We're about to draw a sample of 10 candies, so let's propose the following rule:
+6. What is the probability that Tom is correct given the evidence of drawing 5 Twix, if our prior had instead been P(Tom is correct) = 0.1?
+
+7. Now, suppose we have not yet collected any evidence (that is, we have not collected a sample of 10 candies yet.) We're about to draw a sample of 10 candies, so let's propose the following rule:
 
 * If our sample contains 5 or more Twix, we will judge Tom to be correct.
 * If our sample contains 4 or fewer Twix, we will judge Jessy to be correct.
 
-To measure how good our rule is, what is the probability of the following *errors*?
+To measure how good our rule is, we can find the probability of the following *errors*:
 
 a. What is the probability that Tom is correct, but our sample supports Jessy's claim? In other words, what is P(4 or fewer Twix | Tom is correct)?
 b. What is the probability that Jessy is correct, but our sample supports Tom's claim? In other words, what is P(5 or more Twix | Jessy is correct)?
 
-7. Could we modify the above rule by increasing or decreasing our cutoff value in such a way that both errors would be reduced?
+(In both cases, estimate the probability using your simulations from earlier.)
 
-8. Using Bayes' Theorem and the approximate probabilities you found earlier, what is the probability that Tom is correct given the evidence of drawing 5 Twix? Use the prior probability P(Tom is correct) = 0.5. Compare this to your answer to question 2 -- how good was your earlier guess?
-
-9. What is the probability that Tom is correct given the evidence of drawing 5 Twix, if our prior had instead been P(Tom is correct) = 0.1?
+8. Could we modify the above rule by increasing or decreasing our cutoff value in such a way that both errors would be reduced?

@@ -141,7 +141,7 @@
       <p class="authors">
            <span class="glyphicon glyphicon-user"></span> Todd CadwalladerOlsker
       </p>
-         <p class="date"><span class="glyphicon glyphicon-calendar"></span> <em>Last updated:</em> 2022-02-24</p>
+         <p class="date"><span class="glyphicon glyphicon-calendar"></span> <em>Last updated:</em> 2022-03-01</p>
            
 
    
@@ -418,15 +418,20 @@ monty(strat=&quot;switch&quot;,1000,FALSE)</code></pre>
 <p>and for Jessy’s claim:</p>
 <p><code>Candy_Jessy &lt;- c(rep(&quot;Twix&quot;, 6), rep(&quot;Reese&#39;s&quot;, 14))</code></p>
 <p>Now, we’ll simulate drawing 10 candies out of the bag <em>given</em> each of these claims. For each claim, we’ll do 1000 simulations. Run the following code in R:</p>
-<pre class="r"><code>library(tidyverse) # if you have not already loaded it
+<pre class="r"><code>library(tidyverse) ### if you have not already done so
 
+### --- change these as needed
 sims &lt;- 1000
 samp_size &lt;- 10
+correct_person &lt;- &quot;Tom&quot;
+correct_person_dist &lt;- Candy_Tom
+### ---
+
 sample_df &lt;- data.frame(matrix(ncol = samp_size, nrow = 0))
 colnames(sample_df) &lt;- c(1:samp_size)
 
 for(i in 1:sims) {
-  candy_sample &lt;- sample(Candy_Tom, samp_size, replace = F)
+  candy_sample &lt;- sample(correct_person_dist, samp_size, replace = F)
   sample_df[i,] &lt;- t(candy_sample)
 }
 
@@ -438,30 +443,32 @@ sample_df %&gt;% ggplot(aes(x = Twix_count)) +
   geom_vline(aes(xintercept = 5), linetype = &quot;dashed&quot;, color = &quot;firebrick&quot;) +
   scale_x_continuous(breaks = c(1:10),labels = c(1:10)) +
   labs(title =  paste(sims, &quot;simulations of drawing&quot;, samp_size, &quot;candies&quot;),
-       subtitle = &quot;assuming Tom&#39;s claim is correct.&quot;,
+       subtitle = paste(&quot;assuming &quot;, correct_person, &quot;&#39;s claim is correct.&quot;, sep = &quot;&quot;),
        x = &quot;Number of Twix in sample&quot;,
        y = &quot;Number of simulations&quot;)</code></pre>
 <p>Looking at this histogram, <em>approximate</em> the probability of drawing exactly 5 Twix <em>under the assumption</em> that Tom’s claim is correct. You can use</p>
-<p><code>count(Twix_sims_T, Twix_counter == 5)</code></p>
-<p>find the exact number of simulations in which exactly 5 Twix were drawn, but remember this number (divided by 1000) is still only an approximation of the probability.</p>
+<p><code>sample_df %&gt;% count(Twix_count == 5)</code></p>
+<p>or</p>
+<p><code>sample_df %&gt;% select(Twix_count) %&gt;% table()</code></p>
+<p>to find the exact number of simulations in which exactly 5 Twix were drawn, but remember this number (divided by 1000) is still only an approximation of the probability.</p>
 <ol start="4" style="list-style-type: decimal">
 <li><p>Modify the above code to get an approximation of the probability of drawing exactly 5 Twix under the assumption that Jessy’s claim is correct.</p></li>
-<li><p>Which person is more liekly to be correct, given our evidence?</p></li>
+<li><p>Using Bayes’ Theorem and the approximate probabilities you found earlier, what is the probability that Tom is correct given the evidence of drawing 5 Twix? Use the prior probability P(Tom is correct) = 0.5. Compare this to your answer to question 2 – how good was your earlier guess?</p></li>
+<li><p>What is the probability that Tom is correct given the evidence of drawing 5 Twix, if our prior had instead been P(Tom is correct) = 0.1?</p></li>
 <li><p>Now, suppose we have not yet collected any evidence (that is, we have not collected a sample of 10 candies yet.) We’re about to draw a sample of 10 candies, so let’s propose the following rule:</p></li>
 </ol>
 <ul>
 <li>If our sample contains 5 or more Twix, we will judge Tom to be correct.</li>
 <li>If our sample contains 4 or fewer Twix, we will judge Jessy to be correct.</li>
 </ul>
-<p>To measure how good our rule is, what is the probability of the following <em>errors</em>?</p>
+<p>To measure how good our rule is, we can find the probability of the following <em>errors</em>:</p>
 <ol style="list-style-type: lower-alpha">
 <li>What is the probability that Tom is correct, but our sample supports Jessy’s claim? In other words, what is P(4 or fewer Twix | Tom is correct)?</li>
 <li>What is the probability that Jessy is correct, but our sample supports Tom’s claim? In other words, what is P(5 or more Twix | Jessy is correct)?</li>
 </ol>
-<ol start="7" style="list-style-type: decimal">
-<li><p>Could we modify the above rule by increasing or decreasing our cutoff value in such a way that both errors would be reduced?</p></li>
-<li><p>Using Bayes’ Theorem and the approximate probabilities you found earlier, what is the probability that Tom is correct given the evidence of drawing 5 Twix? Use the prior probability P(Tom is correct) = 0.5. Compare this to your answer to question 2 – how good was your earlier guess?</p></li>
-<li><p>What is the probability that Tom is correct given the evidence of drawing 5 Twix, if our prior had instead been P(Tom is correct) = 0.1?</p></li>
+<p>(In both cases, estimate the probability using your simulations from earlier.)</p>
+<ol start="8" style="list-style-type: decimal">
+<li>Could we modify the above rule by increasing or decreasing our cutoff value in such a way that both errors would be reduced?</li>
 </ol>
 </div>
 </div>
